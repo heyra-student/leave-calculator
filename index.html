@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OO점 파트너 연차 계산기</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: var(--gray-800);
+      line-height: 1.6;
+      padding: 24px 16px 60px;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      margin-bottom: 10px;
+      border: 1px solid var(--primary-border);
+    }
+
+    /* 직접 입력 가능한 지점명 제목 영역 */
+    .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .store-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+    }
+
+    .store-input {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary);
+      background: #ffffff;
+      border: 2px dashed #93c5fd;
+      border-radius: var(--radius-sm);
+      padding: 3px 12px;
+      text-align: center;
+      outline: none;
+      width: 140px;
+      transition: all 0.2s ease;
+      letter-spacing: -0.02em;
+    }
+
+    .store-input:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .store-input:focus {
+      border-color: var(--primary);
+      border-style: solid;
+      background: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .main-title-suffix {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.02em;
+    }
+
+    .header-tip {
+      font-size: 12.5px;
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14.5px;
+      color: var(--gray-600);
+      word-break: keep-all;
+    }
+
+    /* 회계연도 기준 안내 콜아웃 */
+    .rule-callout {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #1e40af;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    /* 파트너 전환 토글 바 (Tabs) */
+    .employee-nav-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 18px;
+    }
+
+    .nav-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--gray-500);
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .emp-toggle-group {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+
+    .emp-toggle-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 10px 6px;
+      background: var(--gray-100);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .emp-toggle-btn:hover {
+      background: #e2e8f0;
+      border-color: var(--gray-300);
+    }
+
+    .emp-toggle-btn.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .emp-toggle-btn .emp-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .emp-toggle-btn.active .emp-name {
+      color: var(--primary);
+    }
+
+    .emp-toggle-btn .emp-badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gray-500);
+      background: #ffffff;
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .emp-toggle-btn.active .emp-badge {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: var(--primary-border);
+      font-weight: 600;
+    }
+
+    .emp-toggle-btn.summary-tab {
+      background: #faf5ff;
+      border-color: #e9d5ff;
+    }
+    .emp-toggle-btn.summary-tab.active {
+      background: #f3e8ff;
+      border-color: #a855f7;
+      box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+    }
+    .emp-toggle-btn.summary-tab.active .emp-name {
+      color: #7e22ce;
+    }
+
+    /* 카드 */
+    .card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .icon-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 폼 설정 바 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1.2fr auto;
+      gap: 14px;
+      align-items: flex-end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .form-control {
+      width: 100%;
+      height: 42px;
+      padding: 8px 12px;
+      font-size: 14.5px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s ease;
+      background-color: #ffffff;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: none;
+      height: 42px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+    .btn-secondary:hover { background: var(--gray-200); }
+
+    /* 파트너 근속 배너 */
+    .tenure-banner {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .tenure-info h3 {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #94a3b8;
+      margin-bottom: 2px;
+    }
+
+    .tenure-info .highlight {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .current-period-tag {
+      background: rgba(37, 99, 235, 0.35);
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      text-align: right;
+    }
+
+    .current-period-tag .label {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      margin-bottom: 1px;
+    }
+
+    .current-period-tag .val {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #93c5fd;
+    }
+
+    /* 현재 유효 회계연도 대시보드 */
+    .active-year-box {
+      background: #ffffff;
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.08);
+      position: relative;
+    }
+
+    .active-year-box::after {
+      content: "현재 유효한 연차 사용 주기";
+      position: absolute;
+      top: -11px;
+      left: 20px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 9999px;
+    }
+
+    .active-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .stat-card {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .stat-card.highlight-green {
+      background: var(--success-light);
+      border-color: #a7f3d0;
+    }
+
+    .stat-card.highlight-orange {
+      background: var(--warning-light);
+      border-color: #fde68a;
+    }
+
+    .stat-card .stat-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 4px;
+    }
+
+    .stat-card .stat-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .stat-card.highlight-green .stat-val { color: #059669; }
+    .stat-card.highlight-orange .stat-val { color: #d97706; font-size: 16px; }
+
+    .stat-card .stat-sub {
+      font-size: 11.5px;
+      color: var(--gray-500);
+      word-break: keep-all;
+    }
+
+    .next-grant-bar {
+      margin-top: 14px;
+      background: #f8fafc;
+      border: 1px dashed var(--gray-300);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--gray-700);
+    }
+
+    /* 회계연도 단위 테이블 */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      margin-top: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+      min-width: 760px;
+    }
+
+    th {
+      background: var(--gray-100);
+      padding: 10px 12px;
+      color: var(--gray-700);
+      font-weight: 600;
+      border-bottom: 1px solid var(--gray-200);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-800);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr.row-active { background-color: #f0f7ff; font-weight: 600; }
+    tr.row-expired { background-color: #fafafa; color: var(--gray-500); }
+    tr.row-future { background-color: #ffffff; color: var(--gray-400); }
+
+    .used-input-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .used-input {
+      width: 60px;
+      height: 30px;
+      padding: 2px 4px;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-align: center;
+      border: 1.5px solid var(--gray-300);
+      border-radius: 6px;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .used-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    .used-input:disabled {
+      background: var(--gray-100);
+      color: var(--gray-400);
+      border-color: var(--gray-200);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-badge.active { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+    .status-badge.expired { background: var(--gray-200); color: var(--gray-600); }
+    .status-badge.future { background: #f1f5f9; color: #94a3b8; }
+
+    /* 5인 통합 요약 뷰 */
+    #allEmployeesView {
+      display: none;
+    }
+
+    .summary-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+    }
+
+    .law-explanation {
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      border: 1px dashed var(--gray-300);
+      margin-top: 20px;
+    }
+
+    .law-explanation h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 8px;
+    }
+
+    .law-explanation ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .law-explanation li {
+      font-size: 12.5px;
+      color: var(--gray-600);
+      line-height: 1.5;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .law-explanation li::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .emp-toggle-group, .header .badge-pill, .btn, .header-tip { display: none !important; }
+      .card, .active-year-box, .summary-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+      .store-input { border: none !important; background: transparent !important; }
+    }
+
+    @media (max-width: 860px) {
+      .emp-toggle-group { grid-template-columns: repeat(3, 1fr); }
+      .form-grid { grid-template-columns: 1fr 1fr; }
+      .active-grid { grid-template-columns: repeat(2, 1fr); }
+      .store-input { font-size: 22px; width: 120px; }
+      .main-title-suffix { font-size: 23px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 상단 헤더: OO점 직접 입력 가능 -->
+  <header class="header">
+    <div class="badge-pill">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      회계연도(매년 1월 1일) 기준 연차 산정 방식 적용
+    </div>
+
+    <!-- 타이틀: [지점명 입력] 파트너 연차 계산기 -->
+    <div class="title-row">
+      <div class="store-input-wrap">
+        <input type="text" id="storeNameInput" class="store-input" value="강남점" title="클릭하여 지점명을 수정하세요" placeholder="지점명">
+      </div>
+      <span class="main-title-suffix">파트너 연차 계산기</span>
+    </div>
+    <div class="header-tip">💡 파란색 점선 상자를 클릭하면 우리 지점명(예: 홍대점, 역삼점 등)으로 바로 바꿀 수 있습니다.</div>
+    <p>입사 첫 해는 월차로 계산하고, 그다음 해부터는 매년 1월 1일 기준으로 1년 단위 연차를 부여·소멸합니다.</p>
+  </header>
+
+  <!-- 회계연도 기준 안내 콜아웃 -->
+  <div class="rule-callout">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+    <div>
+      <strong>회계연도(1월 1일) 기준 연차 산정 공식 안내:</strong><br>
+      • <strong>입사 첫 해:</strong> 입사일부터 12월 31일까지 1개월 개근 시 1일씩 '월차' 부여<br>
+      • <strong>입사 다음 해 1월 1일:</strong> 전년도 재직일수 비례 연차 부여 <code>[15일 × (전년도 재직일수 ÷ 365)]</code><br>
+      • <strong>그다음 해 1월 1일부터:</strong> 매년 1월 1일 15일 일괄 부여 (3년차부터 2년마다 1일씩 가산, 최대 25일), 사용 기간은 매년 1월 1일 ~ 12월 31일(12월 31일 자정 소멸)
+    </div>
+  </div>
+
+  <!-- 파트너 전환 토글 바 (Tabs) -->
+  <section class="employee-nav-card">
+    <div class="nav-label">
+      <span>👥 파트너 선택 (클릭하여 전환)</span>
+      <span style="font-weight:normal; text-transform:none; color:var(--gray-500);">지점명 및 파트너 정보는 브라우저에 자동 저장됩니다</span>
+    </div>
+    <div class="emp-toggle-group" id="empToggleContainer">
+      <!-- JS에서 5명 파트너 탭 + 1개 전체 요약 탭 동적 생성 -->
+    </div>
+  </section>
+
+  <!-- [뷰 1] 개별 파트너 관리 뷰 -->
+  <div id="singleEmployeeView">
+    <section class="card" style="padding:18px 22px;">
+      <div class="card-title">
+        <div class="icon-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span id="currentEmpSettingTitle">파트너 정보 및 입사일 설정</span>
+        </div>
+        <span style="font-size:12px; color:var(--gray-500);">이름과 입사일을 언제든 변경할 수 있습니다</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="empNameInput">파트너 이름</label>
+          <input type="text" id="empNameInput" class="form-control" placeholder="이름 입력">
+        </div>
+
+        <div class="form-group">
+          <label for="empHireDateInput">입사일</label>
+          <input type="date" id="empHireDateInput" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="baseDateInput">계산 기준일 (오늘)</label>
+          <input type="date" id="baseDateInput" class="form-control">
+        </div>
+
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn btn-secondary" onclick="window.print()" title="인쇄 및 PDF 저장">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            인쇄
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 파트너 근속 배너 -->
+    <div class="tenure-banner">
+      <div class="tenure-info">
+        <h3 id="tenureEmpLabel">근무 기간</h3>
+        <div class="highlight" id="tenureString">계산 중...</div>
+      </div>
+      <div class="current-period-tag">
+        <div class="label">현재 적용 중인 연차 주기</div>
+        <div class="val" id="activePeriodName">확인 중...</div>
+      </div>
+    </div>
+
+    <!-- 현재 유효한 회계연도 연차 주기 대시보드 -->
+    <section class="active-year-box">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+        <div>
+          <h2 style="font-size:17px; font-weight:800; color:var(--gray-900);" id="activePeriodHeading">
+            이번 연차 주기 현황
+          </h2>
+          <p style="font-size:12.5px; color:var(--gray-600); margin-top:2px;" id="activePeriodDateRange">
+            사용 유효 기간: -
+          </p>
+        </div>
+        <div id="activeDdayBadge" style="background:#fee2e2; color:#b91c1c; font-weight:700; font-size:12.5px; padding:3px 9px; border-radius:6px;">
+          소멸 D-Day
+        </div>
+      </div>
+
+      <div class="active-grid">
+        <div class="stat-card">
+          <div class="stat-label">이번 주기 발생 연차</div>
+          <div class="stat-val"><span id="activeTotalDays">0</span><span style="font-size:14px; font-weight:600;">일</span></div>
+          <div class="stat-sub" id="activeGrantRule">회계연도 기준 부여</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">이번 주기 사용 연차</div>
+          <div class="stat-val"><span id="activeUsedDays">0</span><span style="font-size:14px; font-weight:600;">일</span></div>
+          <div class="stat-sub">아래 표에서 입력</div>
+        </div>
+
+        <div class="stat-card highlight-green">
+          <div class="stat-label">소멸 전 남은 연차 (잔여)</div>
+          <div class="stat-val"><span id="activeRemainDays">0</span><span style="font-size:14px; font-weight:600;">일</span></div>
+          <div class="stat-sub" id="activeRemainNote">현재 사용 가능한 휴가</div>
+        </div>
+
+        <div class="stat-card highlight-orange">
+          <div class="stat-label">연차 소멸(만료) 예정일</div>
+          <div class="stat-val" id="activeExpireDate" style="font-size:15px; margin-top:4px;">-</div>
+          <div class="stat-sub" id="activeExpireCountdown">미사용 시 소멸</div>
+        </div>
+      </div>
+
+      <div class="next-grant-bar" id="nextGrantBar">
+        <div>
+          📢 <strong>다음 연차 발생 예정일:</strong> <span id="nextGrantDateText">-</span>
+          <span style="color:var(--gray-500); margin-left:6px;" id="nextGrantDetailText"></span>
+        </div>
+        <span id="nextGrantDday" style="font-weight:700; color:var(--primary);">D-0</span>
+      </div>
+    </section>
+
+    <!-- 회계연도 기준 연차 발생 & 사용 기록표 -->
+    <section class="card">
+      <div class="card-title">
+        <div class="icon-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span id="empTableTitle">회계연도 기준 연차 발생 & 사용 기록표</span>
+        </div>
+        <span style="font-size:12px; color:var(--gray-500);">
+          '사용한 연차'에 숫자를 입력하면 즉시 잔여 연차가 계산됩니다
+        </span>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>구분 (연차 주기)</th>
+              <th>연차 사용 유효 기간 (1년간)</th>
+              <th>발생 연차</th>
+              <th>사용한 연차 (직접 입력)</th>
+              <th>남은 연차 (잔여)</th>
+              <th>소멸 및 관리 상태</th>
+              <th>계산 근거</th>
+            </tr>
+          </thead>
+          <tbody id="periodTableBody"></tbody>
+          <tfoot id="tableFooter" style="background:#f8fafc; font-weight:700; border-top:2px solid var(--gray-300);"></tfoot>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- [뷰 2] 5명 전체 한눈에 보기 (종합 요약 현황표) -->
+  <div id="allEmployeesView">
+    <section class="summary-card">
+      <div class="card-title">
+        <div class="icon-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#7e22ce;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span id="summaryTableTitle">전체 파트너(5명) 연차 & 소멸 통합 현황표</span>
+        </div>
+        <span style="font-size:12.5px; color:var(--gray-500);">기준일 현재 5명 전체의 당해 연도 잔여 연차와 12월 31일 소멸 D-Day를 확인합니다</span>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>파트너명</th>
+              <th>입사일</th>
+              <th>근속 기간</th>
+              <th>현재 적용 주기</th>
+              <th>발생 연차</th>
+              <th>사용 연차</th>
+              <th>남은 연차 (잔여)</th>
+              <th>연차 소멸 예정일</th>
+              <th>소멸 D-Day</th>
+              <th>바로가기</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- 근로기준법 핵심 요약 -->
+  <div class="law-explanation">
+    <h4>💡 회계연도 기준 연차 핵심 법령 및 실무 팁</h4>
+    <ul>
+      <li><strong>회계연도 기준 도입 근거:</strong> 회사의 편의를 위해 매년 1월 1일에 일괄 연차를 부여하는 방식은 고용노동부 행정해석상 허용되며, <em>퇴사 시 입사일 기준과 비교하여 근로자에게 불리하지 않도록 정산</em>해야 합니다.</li>
+      <li><strong>입사 첫 해 (월차):</strong> 입사한 첫 해에는 1개월 개근 시 1일씩 월차가 발생합니다.</li>
+      <li><strong>입사 다음 해 1월 1일 (비례 연차):</strong> 전년도 근무 기간에 비례하여 <code>15일 × (전년도 재직일수 ÷ 365)</code>로 산정됩니다.</li>
+      <li><strong>그다음 해 1월 1일부터 (정규 연차 및 가산):</strong> 매년 1월 1일에 15일 일괄 부여되며, 만 2년 이상 근속 후 맞이하는 회계연도부터 2년마다 1일씩 가산되어 최대 25일까지 늘어납니다.</li>
+    </ul>
+  </div>
+
+  <footer class="footer">
+    <p><span id="footerStoreName">OO점</span> 파트너 연차 계산기 | 브라우저 로컬 저장소에 지점명, 파트너 이름, 입사일, 사용 일수가 안전하게 보관됩니다.</p>
+  </footer>
+</div>
+
+<script>
+  // 5명 기본 파트너 데이터
+  const DEFAULT_EMPLOYEES = [
+    {
+      id: 1,
+      name: '김철수',
+      hireDate: '2023-04-01',
+      usage: { 'period_first_year': 8, 'period_2024': 11.2, 'period_2025': 15, 'period_2026': 5 }
+    },
+    {
+      id: 2,
+      name: '이영희',
+      hireDate: '2024-07-15',
+      usage: { 'period_first_year': 5, 'period_2025': 6.5, 'period_2026': 3 }
+    },
+    {
+      id: 3,
+      name: '박민수',
+      hireDate: '2025-03-01',
+      usage: { 'period_first_year': 9, 'period_2026': 4 }
+    },
+    {
+      id: 4,
+      name: '정수진',
+      hireDate: '2021-02-15',
+      usage: { 'period_first_year': 10, 'period_2022': 13.1, 'period_2023': 15, 'period_2024': 15, 'period_2025': 14, 'period_2026': 6 }
+    },
+    {
+      id: 5,
+      name: '최동욱',
+      hireDate: '2026-03-01',
+      usage: { 'period_first_year': 4 }
+    }
+  ];
+
+  let currentStoreName = '강남점';
+  let employees = [];
+  let currentEmpId = 1;
+  let baseDateStr = '';
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadAllData();
+
+    const today = new Date();
+    baseDateStr = toISODate(today);
+    document.getElementById('baseDateInput').value = baseDateStr;
+
+    // 지점명 인풋 이벤트
+    const storeInputEl = document.getElementById('storeNameInput');
+    storeInputEl.value = currentStoreName;
+    updateStoreTitleUI();
+
+    storeInputEl.addEventListener('input', (e) => {
+      currentStoreName = e.target.value.trim() || 'OO점';
+      updateStoreTitleUI();
+      saveAllData();
+    });
+
+    // 파트너 입력 이벤트
+    document.getElementById('empNameInput').addEventListener('input', onNameChange);
+    document.getElementById('empHireDateInput').addEventListener('change', onHireDateChange);
+    document.getElementById('baseDateInput').addEventListener('change', (e) => {
+      baseDateStr = e.target.value;
+      renderCurrentView();
+    });
+
+    renderEmpTabs();
+    selectEmployee(1);
+  });
+
+  function updateStoreTitleUI() {
+    document.title = `${currentStoreName} 파트너 연차 계산기`;
+    document.getElementById('footerStoreName').textContent = currentStoreName;
+    document.getElementById('summaryTableTitle').textContent = `[${currentStoreName}] 전체 파트너(5명) 연차 & 소멸 통합 현황표`;
+  }
+
+  function loadAllData() {
+    try {
+      const savedStore = localStorage.getItem('company_store_name');
+      if (savedStore) currentStoreName = savedStore;
+
+      const saved = localStorage.getItem('company_5_emp_fiscal_leave_v2');
+      if (saved) {
+        employees = JSON.parse(saved);
+        if (!Array.isArray(employees) || employees.length < 5) {
+          employees = JSON.parse(JSON.stringify(DEFAULT_EMPLOYEES));
+        }
+      } else {
+        employees = JSON.parse(JSON.stringify(DEFAULT_EMPLOYEES));
+      }
+    } catch(e) {
+      employees = JSON.parse(JSON.stringify(DEFAULT_EMPLOYEES));
+    }
+  }
+
+  function saveAllData() {
+    try {
+      localStorage.setItem('company_store_name', currentStoreName);
+      localStorage.setItem('company_5_emp_fiscal_leave_v2', JSON.stringify(employees));
+    } catch(e) {}
+  }
+
+  function toISODate(d) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function toKoreanDate(d) {
+    if (!d) return '-';
+    return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
+  }
+
+  function getDaysBetween(d1, d2) {
+    return Math.round((d2 - d1) / (24 * 60 * 60 * 1000));
+  }
+
+  function addMonths(date, months) {
+    const d = new Date(date);
+    const originalDate = d.getDate();
+    d.setMonth(d.getMonth() + months);
+    if (d.getDate() !== originalDate) d.setDate(0);
+    return d;
+  }
+
+  function calculateTenure(startDate, endDate) {
+    let years = endDate.getFullYear() - startDate.getFullYear();
+    let months = endDate.getMonth() - startDate.getMonth();
+    let days = endDate.getDate() - startDate.getDate();
+
+    if (days < 0) {
+      months -= 1;
+      const prevMonthLastDay = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
+      days += prevMonthLastDay;
+    }
+    if (months < 0) {
+      years -= 1;
+      months += 12;
+    }
+    return { years, months, days };
+  }
+
+  function renderEmpTabs() {
+    const container = document.getElementById('empToggleContainer');
+    container.innerHTML = '';
+
+    employees.forEach(emp => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `emp-toggle-btn ${emp.id === currentEmpId ? 'active' : ''}`;
+      btn.onclick = () => selectEmployee(emp.id);
+
+      const hireD = new Date(emp.hireDate + 'T00:00:00');
+      const baseD = new Date(baseDateStr + 'T00:00:00');
+      const tenure = calculateTenure(hireD, baseD);
+      let tenureLabel = tenure.years > 0 ? `${tenure.years}년차` : '1년차';
+
+      btn.innerHTML = `
+        <div class="emp-name">👤 ${emp.name}</div>
+        <div class="emp-badge">${tenureLabel}</div>
+      `;
+      container.appendChild(btn);
+    });
+
+    const sumBtn = document.createElement('button');
+    sumBtn.type = 'button';
+    sumBtn.className = `emp-toggle-btn summary-tab ${currentEmpId === 0 ? 'active' : ''}`;
+    sumBtn.onclick = () => selectEmployee(0);
+    sumBtn.innerHTML = `
+      <div class="emp-name" style="color:#7e22ce;">📊 전체 요약</div>
+      <div class="emp-badge" style="color:#7e22ce; border-color:#d8b4fe;">5인 종합표</div>
+    `;
+    container.appendChild(sumBtn);
+  }
+
+  function selectEmployee(id) {
+    currentEmpId = id;
+    renderEmpTabs();
+    renderCurrentView();
+  }
+
+  function renderCurrentView() {
+    if (currentEmpId === 0) {
+      document.getElementById('singleEmployeeView').style.display = 'none';
+      document.getElementById('allEmployeesView').style.display = 'block';
+      renderSummaryView();
+    } else {
+      document.getElementById('singleEmployeeView').style.display = 'block';
+      document.getElementById('allEmployeesView').style.display = 'none';
+      renderSingleEmployee();
+    }
+  }
+
+  function renderSingleEmployee() {
+    const emp = employees.find(e => e.id === currentEmpId);
+    if (!emp) return;
+
+    document.getElementById('empNameInput').value = emp.name;
+    document.getElementById('empHireDateInput').value = emp.hireDate;
+    document.getElementById('currentEmpSettingTitle').textContent = `[${emp.name} 파트너] 정보 및 입사일 설정`;
+    document.getElementById('empTableTitle').textContent = `[${emp.name} 파트너] 회계연도 기준 연차 발생 & 사용 기록표`;
+    document.getElementById('tenureEmpLabel').textContent = `${emp.name} 파트너의 근무 기간`;
+
+    const hireDate = new Date(emp.hireDate + 'T00:00:00');
+    const baseDate = new Date(baseDateStr + 'T00:00:00');
+
+    const tenure = calculateTenure(hireDate, baseDate);
+    const totalDays = getDaysBetween(hireDate, baseDate) + 1;
+    let tenureText = '';
+    if (tenure.years > 0) tenureText += `${tenure.years}년 `;
+    if (tenure.months > 0) tenureText += `${tenure.months}개월 `;
+    tenureText += `${tenure.days}일`;
+    if (tenureText.trim() === '') tenureText = '1일';
+
+    document.getElementById('tenureString').textContent = `${tenureText}째 근무 중 (총 ${totalDays.toLocaleString()}일)`;
+
+    const periods = calculateFiscalPeriods(emp, hireDate, baseDate);
+    let activePeriod = periods.find(p => p.status === 'active') || periods[periods.length - 1];
+
+    renderActiveDashboard(emp, activePeriod, baseDate, periods);
+    renderPeriodTable(emp, periods, baseDate);
+  }
+
+  function calculateFiscalPeriods(emp, hireDate, baseDate) {
+    const periods = [];
+    const hireYear = hireDate.getFullYear();
+    const baseYear = baseDate.getFullYear();
+
+    const firstYearEnd = new Date(hireYear, 11, 31);
+    const firstYearExpire = new Date(hireYear + 1, hireDate.getMonth(), hireDate.getDate());
+
+    let firstYearGranted = 0;
+    for (let m = 1; m <= 11; m++) {
+      const grantDay = addMonths(hireDate, m);
+      if (grantDay <= firstYearEnd && grantDay <= baseDate) firstYearGranted++;
+    }
+    if (baseDate > firstYearEnd) {
+      firstYearGranted = 0;
+      for (let m = 1; m <= 11; m++) {
+        if (addMonths(hireDate, m) <= firstYearEnd) firstYearGranted++;
+      }
+    }
+
+    const firstYearKey = 'period_first_year';
+    const firstYearUsed = emp.usage[firstYearKey] !== undefined ? emp.usage[firstYearKey] : 0;
+    const isFirstYearActive = (baseDate >= hireDate && baseDate <= firstYearEnd);
+    const isFirstYearExpired = (baseDate > firstYearEnd);
+
+    periods.push({
+      key: firstYearKey,
+      year: hireYear,
+      name: `입사 첫 해 (${hireYear}년 월차)`,
+      startDate: hireDate,
+      endDate: firstYearEnd,
+      expireDate: firstYearExpire,
+      grantDays: firstYearGranted,
+      usedDays: firstYearUsed,
+      remainDays: Math.round((firstYearGranted - firstYearUsed) * 10) / 10,
+      status: isFirstYearActive ? 'active' : (isFirstYearExpired ? 'expired' : 'future'),
+      ruleDesc: `입사일~12월 31일까지 1개월 개근 시 1일씩 발생 (총 ${firstYearGranted}일 발생)`
+    });
+
+    const maxYear = Math.max(baseYear + 1, hireYear + 1);
+
+    for (let y = hireYear + 1; y <= maxYear; y++) {
+      const pStart = new Date(y, 0, 1);
+      const pEnd = new Date(y, 11, 31);
+
+      let grantDays = 15;
+      let ruleDesc = '';
+
+      if (y === hireYear + 1) {
+        const daysInFirstYear = getDaysBetween(hireDate, firstYearEnd) + 1;
+        const totalDaysInHireYear = ((hireYear % 4 === 0 && hireYear % 100 !== 0) || hireYear % 400 === 0) ? 366 : 365;
+        const rawProportional = (15 * daysInFirstYear) / totalDaysInHireYear;
+        grantDays = Math.round(rawProportional * 10) / 10;
+        ruleDesc = `전년도 재직일수 비례 연차 [15일 × (${daysInFirstYear}일 ÷ ${totalDaysInHireYear}일) = ${grantDays}일]`;
+      } else {
+        const fiscalConsecutiveYear = y - hireYear;
+        if (fiscalConsecutiveYear <= 2) {
+          grantDays = 15;
+          ruleDesc = `1월 1일 기준 기본 연차 15일 부여`;
+        } else {
+          const added = Math.floor((fiscalConsecutiveYear - 1) / 2);
+          grantDays = Math.min(25, 15 + added);
+          ruleDesc = `기본 15일 + 회계연도 근속 가산(${added}일) = ${grantDays}일 [최대 25일]`;
+        }
+      }
+
+      const pKey = `period_${y}`;
+      const pUsed = emp.usage[pKey] !== undefined ? emp.usage[pKey] : 0;
+
+      let status = 'future';
+      if (baseDate > pEnd) status = 'expired';
+      else if (baseDate >= pStart && baseDate <= pEnd) status = 'active';
+
+      periods.push({
+        key: pKey,
+        year: y,
+        name: `${y}년도 (1월 1일 기준)`,
+        startDate: pStart,
+        endDate: pEnd,
+        expireDate: pEnd,
+        grantDays: grantDays,
+        usedDays: (status === 'future') ? 0 : pUsed,
+        remainDays: (status === 'future') ? grantDays : (Math.round((grantDays - pUsed) * 10) / 10),
+        status: status,
+        ruleDesc: ruleDesc
+      });
+    }
+
+    return periods;
+  }
+
+  function renderActiveDashboard(emp, active, baseDate, allPeriods) {
+    document.getElementById('activePeriodName').textContent = active.name;
+    document.getElementById('activePeriodHeading').textContent = `📌 ${emp.name} 파트너의 현재 연차 주기 (${active.name})`;
+    document.getElementById('activePeriodDateRange').textContent = 
+      `사용 유효 기간: ${toISODate(active.startDate)} ~ ${toISODate(active.endDate)} (1년간)`;
+
+    const dDayToExpire = getDaysBetween(baseDate, active.endDate);
+    const ddayBadge = document.getElementById('activeDdayBadge');
+    if (dDayToExpire > 0) {
+      ddayBadge.textContent = `12월 31일 소멸까지 D-${dDayToExpire}일`;
+      ddayBadge.style.background = dDayToExpire <= 60 ? '#fee2e2' : '#fef3c7';
+      ddayBadge.style.color = dDayToExpire <= 60 ? '#991b1b' : '#92400e';
+    } else if (dDayToExpire === 0) {
+      ddayBadge.textContent = '오늘 자정 소멸 예정!';
+      ddayBadge.style.background = '#ef4444';
+      ddayBadge.style.color = '#fff';
+    } else {
+      ddayBadge.textContent = '기간 만료';
+    }
+
+    document.getElementById('activeTotalDays').textContent = active.grantDays;
+    document.getElementById('activeGrantRule').textContent = active.ruleDesc;
+
+    document.getElementById('activeUsedDays').textContent = active.usedDays;
+    
+    const remainEl = document.getElementById('activeRemainDays');
+    remainEl.textContent = active.remainDays;
+    remainEl.style.color = active.remainDays < 0 ? 'var(--danger)' : '#059669';
+
+    document.getElementById('activeExpireDate').textContent = toKoreanDate(active.endDate);
+    document.getElementById('activeExpireCountdown').textContent = 
+      dDayToExpire > 0 ? `${dDayToExpire}일 뒤 12월 31일 자정 소멸` : '소멸 완료';
+
+    const nextYear = active.year + 1;
+    const nextGrantDate = new Date(nextYear, 0, 1);
+    const nextDays = getDaysBetween(baseDate, nextGrantDate);
+
+    let nextPeriod = allPeriods.find(p => p.year === nextYear);
+    const nextDaysCount = nextPeriod ? nextPeriod.grantDays : 15;
+
+    document.getElementById('nextGrantDateText').textContent = `${nextYear}년 1월 1일`;
+    document.getElementById('nextGrantDetailText').textContent = `(+${nextDaysCount}일 일괄 부여 예정)`;
+    document.getElementById('nextGrantDday').textContent = nextDays > 0 ? `D-${nextDays}` : '도래 완료';
+  }
+
+  function renderPeriodTable(emp, periods, baseDate) {
+    const tbody = document.getElementById('periodTableBody');
+    tbody.innerHTML = '';
+
+    let totalGranted = 0;
+    let totalUsed = 0;
+    let totalRemain = 0;
+
+    periods.forEach(p => {
+      const tr = document.createElement('tr');
+      if (p.status === 'active') tr.classList.add('row-active');
+      else if (p.status === 'expired') tr.classList.add('row-expired');
+      else if (p.status === 'future') tr.classList.add('row-future');
+
+      let statusBadge = '';
+      if (p.status === 'active') {
+        const dDay = getDaysBetween(baseDate, p.endDate);
+        statusBadge = `<span class="status-badge active">🟢 현재 사용 중 (D-${dDay})</span>`;
+      } else if (p.status === 'expired') {
+        statusBadge = `<span class="status-badge expired">⚪ 만료 (소멸/정산)</span>`;
+      } else {
+        const dDay = getDaysBetween(baseDate, p.startDate);
+        statusBadge = `<span class="status-badge future">🔵 예정 (D-${dDay})</span>`;
+      }
+
+      const isFuture = p.status === 'future';
+
+      tr.innerHTML = `
+        <td>
+          <div style="font-weight:700;">${p.name}</div>
+          <div style="font-size:11.5px; color:var(--gray-500);">${p.year} 회계연도</div>
+        </td>
+        <td>
+          <div>${toISODate(p.startDate)} ~ ${toISODate(p.endDate)}</div>
+          <div style="font-size:11.5px; color:${p.status === 'active' ? '#b91c1c' : 'var(--gray-500)'}; font-weight:${p.status === 'active' ? '600' : 'normal'};">
+            ${toISODate(p.endDate)} 24:00 소멸
+          </div>
+        </td>
+        <td style="font-weight:700; color:var(--gray-900);">+${p.grantDays}일</td>
+        <td>
+          <div class="used-input-wrapper">
+            <input type="number" 
+                   class="used-input" 
+                   min="0" 
+                   step="0.5" 
+                   value="${p.usedDays}" 
+                   ${isFuture ? 'disabled' : ''}
+                   onchange="onEmpUsageChange(${emp.id}, '${p.key}', this.value)">
+            <span style="font-size:12.5px; color:var(--gray-600);">일</span>
+          </div>
+        </td>
+        <td style="font-weight:700; color:${p.remainDays < 0 ? 'var(--danger)' : (p.status === 'active' ? 'var(--primary)' : 'var(--gray-700)')};">
+          ${p.remainDays}일
+        </td>
+        <td>${statusBadge}</td>
+        <td style="font-size:12px; color:var(--gray-600);">${p.ruleDesc}</td>
+      `;
+      tbody.appendChild(tr);
+
+      if (!isFuture) {
+        totalGranted += p.grantDays;
+        totalUsed += p.usedDays;
+        totalRemain += p.remainDays;
+      }
+    });
+
+    totalGranted = Math.round(totalGranted * 10) / 10;
+    totalUsed = Math.round(totalUsed * 10) / 10;
+    totalRemain = Math.round(totalRemain * 10) / 10;
+
+    const tfoot = document.getElementById('tableFooter');
+    tfoot.innerHTML = `
+      <tr>
+        <td colspan="2" style="padding:10px 12px; color:var(--gray-800);">[${emp.name} 파트너] 누적 합계 (현재까지)</td>
+        <td style="padding:10px 12px; color:var(--primary); font-size:14.5px;">${totalGranted}일</td>
+        <td style="padding:10px 12px; color:var(--danger); font-size:14.5px;">${totalUsed}일</td>
+        <td style="padding:10px 12px; color:var(--success); font-size:14.5px;">${totalRemain}일</td>
+        <td colspan="2" style="font-size:11.5px; color:var(--gray-500); font-weight:normal;">
+          * 각 회계연도(12월 31일)가 종료된 미사용 연차는 취업규칙에 따라 미사용 연차수당 정산 대상입니다.
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderSummaryView() {
+    const tbody = document.getElementById('summaryTableBody');
+    tbody.innerHTML = '';
+    const baseDate = new Date(baseDateStr + 'T00:00:00');
+
+    employees.forEach(emp => {
+      const hireDate = new Date(emp.hireDate + 'T00:00:00');
+      const tenure = calculateTenure(hireDate, baseDate);
+      let tenureText = tenure.years > 0 ? `${tenure.years}년 ${tenure.months}개월` : `${tenure.months}개월 ${tenure.days}일`;
+
+      const periods = calculateFiscalPeriods(emp, hireDate, baseDate);
+      const active = periods.find(p => p.status === 'active') || periods[periods.length - 1];
+      const dDayToExpire = getDaysBetween(baseDate, active.endDate);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-weight:700; color:var(--gray-900);">👤 ${emp.name}</td>
+        <td>${emp.hireDate}</td>
+        <td>${tenureText}</td>
+        <td><span class="status-badge active">${active.name}</span></td>
+        <td style="font-weight:600;">+${active.grantDays}일</td>
+        <td style="color:var(--danger); font-weight:600;">${active.usedDays}일</td>
+        <td style="color:#059669; font-weight:800; font-size:14.5px;">${active.remainDays}일</td>
+        <td>${toISODate(active.endDate)}</td>
+        <td>
+          <span style="font-weight:700; color:${dDayToExpire <= 60 ? '#b91c1c' : '#d97706'};">
+            D-${dDayToExpire}
+          </span>
+        </td>
+        <td>
+          <button type="button" class="btn btn-secondary" style="height:30px; padding:3px 10px; font-size:12px;" onclick="selectEmployee(${emp.id})">
+            상세 보기
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function onNameChange(e) {
+    const val = e.target.value.trim();
+    if (!val) return;
+    const emp = employees.find(x => x.id === currentEmpId);
+    if (emp) {
+      emp.name = val;
+      renderEmpTabs();
+      document.getElementById('currentEmpSettingTitle').textContent = `[${emp.name} 파트너] 정보 및 입사일 설정`;
+      document.getElementById('empTableTitle').textContent = `[${emp.name} 파트너] 회계연도 기준 연차 발생 & 사용 기록표`;
+      document.getElementById('activePeriodHeading').textContent = `📌 ${emp.name} 파트너의 현재 연차 주기`;
+      saveAllData();
+    }
+  }
+
+  function onHireDateChange(e) {
+    const val = e.target.value;
+    if (!val) return;
+    const emp = employees.find(x => x.id === currentEmpId);
+    if (emp) {
+      emp.hireDate = val;
+      renderEmpTabs();
+      renderSingleEmployee();
+      saveAllData();
+    }
+  }
+
+  function onEmpUsageChange(empId, periodKey, valStr) {
+    let val = parseFloat(valStr);
+    if (isNaN(val) || val < 0) val = 0;
+    const emp = employees.find(x => x.id === empId);
+    if (emp) {
+      emp.usage[periodKey] = val;
+      renderSingleEmployee();
+      saveAllData();
+    }
+  }
+</script>
+
+</body>
+</html>

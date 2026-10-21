@@ -4,83 +4,127 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OO점 파트너 연차 계산기</title>
+  <!-- Pretendard 한글 웹 폰트 링크 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+    /* ==========================================================================
+       DESIGN SYSTEM (Inspired by Notion / DESIGN.md)
+       * Note: Specific company logos, trademarks, and brand names are strictly excluded.
+       ========================================================================== */
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-light: #eff6ff;
-      --primary-border: #bfdbfe;
-      --success: #10b981;
-      --success-light: #ecfdf5;
-      --warning: #f59e0b;
-      --warning-light: #fffbeb;
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --gray-50: #f8fafc;
-      --gray-100: #f1f5f9;
-      --gray-200: #e2e8f0;
-      --gray-300: #cbd5e1;
-      --gray-500: #64748b;
-      --gray-600: #475569;
-      --gray-700: #334155;
-      --gray-800: #1e293b;
-      --gray-900: #0f172a;
-      --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
+      /* Brand & Core Palette */
+      --primary: #0075de;              /* Notion Blue (주요 액션 및 링크) */
+      --primary-active: #005bab;       /* Pressed Blue */
+      --secondary: #213183;            /* Deep Indigo (다크 히어로 밴드) */
+      --on-primary: #ffffff;
+
+      /* Canvas & Surface */
+      --canvas: #ffffff;
+      --canvas-soft: #f6f5f4;          /* Warm Paper (시그니처 배경 오프화이트) */
+      --surface: #ffffff;
+      --hairline: #e6e6e6;             /* 1px 정갈한 헤어라인 테두리 */
+
+      /* Ink Typography */
+      --ink: #000000;                  /* 헤드라인 및 주요 텍스트 */
+      --ink-secondary: #31302e;        /* 웜 차콜 (기본 본문 텍스트) */
+      --ink-muted: #615d59;            /* 스톤 (설명 및 라벨) */
+      --ink-faint: #a39e98;            /* 애쉬 (캡션 및 플레이스홀더) */
+
+      /* Decorative Sticker Palette (시각적 악센트) */
+      --accent-sky: #62aef0;
+      --accent-sky-bg: #edf5fd;
+      --accent-green: #1aae39;
+      --accent-green-bg: #eefaf1;
+      --accent-green-border: #c8edd0;
+      --accent-green-ink: #13862b;
+      --accent-orange: #dd5b00;
+      --accent-orange-bg: #fef6ee;
+      --accent-orange-border: #fcdbc2;
+      --accent-orange-ink: #c2410c;
+      --accent-purple: #d6b6f6;
+      --accent-purple-bg: #f8f3fe;
+      --accent-purple-border: #e8d7fd;
+      --accent-purple-ink: #6b21a8;
+
+      /* Radii */
+      --radius-xs: 4px;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+
+      /* Shadows (헤어라인 중심의 절제된 소프트 음영) */
+      --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 1px var(--hairline);
+      --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.08);
+      --shadow-elevated: 0 10px 24px -4px rgba(0, 0, 0, 0.08);
+
+      /* Compatibility Variables */
+      --danger: #dc2626;
+      --success: #16a34a;
+      --gray-300: var(--hairline);
+      --gray-500: var(--ink-muted);
+      --gray-600: var(--ink-muted);
+      --gray-700: var(--ink-secondary);
+      --gray-800: var(--ink);
+      --gray-900: var(--ink);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.02em;
     }
 
     body {
-      background-color: #f1f5f9;
-      color: var(--gray-800);
+      background-color: var(--canvas-soft); /* Warm Paper */
+      color: var(--ink-secondary);
       line-height: 1.6;
-      padding: 24px 16px 60px;
+      padding: 36px 16px 80px;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 1040px;
+      max-width: 1020px;
       margin: 0 auto;
     }
 
     /* 헤더 */
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     .badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: var(--primary-light);
+      background: var(--surface);
       color: var(--primary);
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      margin-bottom: 10px;
-      border: 1px solid var(--primary-border);
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      margin-bottom: 12px;
+      border: 1px solid var(--hairline);
+      box-shadow: var(--shadow-subtle);
     }
 
-    /* 직접 입력 가능한 지점명 제목 영역 */
+    /* 지점명 직접 입력 제목 */
     .title-row {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .store-input-wrap {
@@ -91,81 +135,92 @@
 
     .store-input {
       font-size: 26px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--primary);
-      background: #ffffff;
-      border: 2px dashed #93c5fd;
-      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1.5px dashed #b8dafc;
+      border-radius: var(--radius-md);
       padding: 3px 12px;
       text-align: center;
       outline: none;
-      width: 140px;
-      transition: all 0.2s ease;
-      letter-spacing: -0.02em;
+      width: 135px;
+      transition: all 0.15s ease;
+      letter-spacing: -0.025px;
     }
 
     .store-input:hover {
       border-color: var(--primary);
-      background: #f8fafc;
+      background: #fcfdfe;
     }
 
     .store-input:focus {
       border-color: var(--primary);
       border-style: solid;
-      background: var(--primary-light);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      background: var(--surface);
+      box-shadow: 0 0 0 3px rgba(0, 117, 222, 0.15);
     }
 
     .main-title-suffix {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--gray-900);
-      letter-spacing: -0.02em;
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.625px;
     }
 
     .header-tip {
-      font-size: 12.5px;
+      font-size: 13px;
       color: var(--primary);
       font-weight: 500;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .header p {
       font-size: 14.5px;
-      color: var(--gray-600);
+      color: var(--ink-muted);
       word-break: keep-all;
     }
 
     /* 회계연도 기준 안내 콜아웃 */
     .rule-callout {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-left: 4px solid var(--primary);
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      font-size: 13px;
-      color: #1e40af;
-      margin-bottom: 18px;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      font-size: 13.5px;
+      color: var(--ink-secondary);
+      margin-bottom: 20px;
       display: flex;
       align-items: flex-start;
-      gap: 10px;
+      gap: 12px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .rule-callout code {
+      background: var(--canvas-soft);
+      border: 1px solid var(--hairline);
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 12.5px;
     }
 
     /* 파트너 전환 토글 바 (Tabs) */
     .employee-nav-card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border-radius: var(--radius-xl);
       padding: 14px 18px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--gray-200);
-      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 20px;
     }
 
     .nav-label {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--gray-500);
-      letter-spacing: 0.04em;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
       margin-bottom: 10px;
       display: flex;
       align-items: center;
@@ -183,31 +238,32 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 4px;
       padding: 10px 6px;
-      background: var(--gray-100);
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-sm);
+      background: var(--canvas-soft);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
       text-align: center;
     }
 
     .emp-toggle-btn:hover {
-      background: #e2e8f0;
-      border-color: var(--gray-300);
+      background: var(--surface);
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
     }
 
     .emp-toggle-btn.active {
-      background: var(--primary-light);
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+      background: var(--surface);
+      border: 1.5px solid var(--primary);
+      box-shadow: 0 0 0 1px var(--primary), 0 2px 6px rgba(0, 117, 222, 0.12);
     }
 
     .emp-toggle-btn .emp-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--gray-800);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -216,52 +272,64 @@
 
     .emp-toggle-btn.active .emp-name {
       color: var(--primary);
+      font-weight: 700;
     }
 
     .emp-toggle-btn .emp-badge {
       font-size: 11px;
       font-weight: 500;
-      color: var(--gray-500);
-      background: #ffffff;
-      padding: 1px 6px;
-      border-radius: 4px;
-      border: 1px solid var(--gray-200);
+      color: var(--ink-muted);
+      background: var(--surface);
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--hairline);
     }
 
     .emp-toggle-btn.active .emp-badge {
-      background: #ffffff;
+      background: var(--accent-sky-bg);
       color: var(--primary);
-      border-color: var(--primary-border);
+      border-color: #cbe4fc;
       font-weight: 600;
     }
 
     .emp-toggle-btn.summary-tab {
-      background: #faf5ff;
-      border-color: #e9d5ff;
+      background: var(--accent-purple-bg);
+      border-color: var(--accent-purple-border);
     }
+
+    .emp-toggle-btn.summary-tab:hover {
+      background: #fdf8ff;
+      border-color: #d8b4fe;
+    }
+
     .emp-toggle-btn.summary-tab.active {
-      background: #f3e8ff;
-      border-color: #a855f7;
-      box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+      background: var(--surface);
+      border: 1.5px solid var(--accent-purple-ink);
+      box-shadow: 0 0 0 1px var(--accent-purple-ink), 0 2px 6px rgba(107, 33, 168, 0.15);
     }
+
     .emp-toggle-btn.summary-tab.active .emp-name {
-      color: #7e22ce;
+      color: var(--accent-purple-ink);
     }
 
     /* 카드 */
     .card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--gray-200);
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
       margin-bottom: 20px;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-hover);
     }
 
     .card-title {
       font-size: 16px;
       font-weight: 700;
-      color: var(--gray-900);
+      color: var(--ink);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -293,24 +361,29 @@
     .form-group label {
       font-size: 13px;
       font-weight: 600;
-      color: var(--gray-700);
+      color: var(--ink-secondary);
     }
 
     .form-control {
       width: 100%;
-      height: 42px;
+      height: 40px;
       padding: 8px 12px;
-      font-size: 14.5px;
-      border: 1.5px solid var(--gray-300);
-      border-radius: var(--radius-sm);
+      font-size: 14px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-md);
       outline: none;
-      transition: all 0.2s ease;
-      background-color: #ffffff;
+      transition: all 0.15s ease;
+      background-color: var(--surface);
+      color: var(--ink);
+    }
+
+    .form-control:hover {
+      border-color: #cbd5e1;
     }
 
     .form-control:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3px rgba(0, 117, 222, 0.12);
     }
 
     .btn {
@@ -318,79 +391,86 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 9px 16px;
+      padding: 8px 18px;
       font-size: 13.5px;
       font-weight: 600;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-full); /* Notion Pill Buttons */
       cursor: pointer;
-      border: none;
-      height: 42px;
-      transition: all 0.2s ease;
+      border: 1px solid var(--hairline);
+      height: 40px;
+      transition: all 0.15s ease;
       white-space: nowrap;
     }
 
     .btn-secondary {
-      background: var(--gray-100);
-      color: var(--gray-700);
-      border: 1px solid var(--gray-300);
+      background: var(--surface);
+      color: var(--ink-secondary);
     }
-    .btn-secondary:hover { background: var(--gray-200); }
 
-    /* 파트너 근속 배너 */
+    .btn-secondary:hover {
+      background: var(--canvas-soft);
+      color: var(--ink);
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+
+    /* 파트너 근속 배너 (Deep Indigo Hero Band) */
     .tenure-banner {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      background: var(--secondary); /* #213183 */
       color: #ffffff;
-      border-radius: var(--radius-md);
-      padding: 18px 22px;
-      margin-bottom: 18px;
+      border-radius: var(--radius-xl);
+      padding: 18px 24px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 14px;
+      box-shadow: 0 4px 14px rgba(33, 49, 131, 0.18);
     }
 
     .tenure-info h3 {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 500;
-      color: #94a3b8;
+      color: rgba(255, 255, 255, 0.7);
       margin-bottom: 2px;
+      letter-spacing: 0.04em;
     }
 
     .tenure-info .highlight {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 700;
       color: #ffffff;
     }
 
     .current-period-tag {
-      background: rgba(37, 99, 235, 0.35);
-      border: 1px solid rgba(147, 197, 253, 0.4);
-      padding: 7px 14px;
-      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 6px 14px;
+      border-radius: var(--radius-md);
       text-align: right;
     }
 
     .current-period-tag .label {
-      font-size: 11.5px;
-      color: #cbd5e1;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
       margin-bottom: 1px;
     }
 
     .current-period-tag .val {
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 700;
-      color: #93c5fd;
+      color: #bce1fe;
     }
 
     /* 현재 유효 회계연도 대시보드 */
     .active-year-box {
-      background: #ffffff;
-      border: 2px solid var(--primary);
-      border-radius: var(--radius-lg);
-      padding: 20px;
+      background: var(--surface);
+      border: 1.5px solid var(--primary);
+      border-radius: var(--radius-xl);
+      padding: 22px;
       margin-bottom: 20px;
-      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.08);
+      box-shadow: 0 4px 16px rgba(0, 117, 222, 0.08);
       position: relative;
     }
 
@@ -402,9 +482,10 @@
       background: var(--primary);
       color: #ffffff;
       font-size: 11.5px;
-      font-weight: 700;
+      font-weight: 600;
       padding: 2px 10px;
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
+      letter-spacing: 0.02em;
     }
 
     .active-grid {
@@ -415,69 +496,86 @@
     }
 
     .stat-card {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      padding: 14px 12px;
+      background: var(--canvas-soft);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-lg);
+      padding: 16px 14px;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      transition: all 0.15s ease;
     }
 
+    .stat-card:hover {
+      background: var(--surface);
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    /* 노션 스티커 그린 (잔여 연차) */
     .stat-card.highlight-green {
-      background: var(--success-light);
-      border-color: #a7f3d0;
+      background: var(--accent-green-bg);
+      border-color: var(--accent-green-border);
     }
 
+    /* 노션 스티커 오렌지 (소멸 예정일) */
     .stat-card.highlight-orange {
-      background: var(--warning-light);
-      border-color: #fde68a;
+      background: var(--accent-orange-bg);
+      border-color: var(--accent-orange-border);
     }
 
     .stat-card .stat-label {
       font-size: 12.5px;
       font-weight: 600;
-      color: var(--gray-600);
+      color: var(--ink-muted);
       margin-bottom: 4px;
     }
 
     .stat-card .stat-val {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--gray-900);
-      line-height: 1.1;
-      margin-bottom: 2px;
+      font-size: 25px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.15;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
     }
 
-    .stat-card.highlight-green .stat-val { color: #059669; }
-    .stat-card.highlight-orange .stat-val { color: #d97706; font-size: 16px; }
+    .stat-card.highlight-green .stat-val {
+      color: var(--accent-green-ink);
+    }
+
+    .stat-card.highlight-orange .stat-val {
+      color: var(--accent-orange-ink);
+      font-size: 16px;
+    }
 
     .stat-card .stat-sub {
-      font-size: 11.5px;
-      color: var(--gray-500);
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 3px;
       word-break: keep-all;
     }
 
     .next-grant-bar {
       margin-top: 14px;
-      background: #f8fafc;
-      border: 1px dashed var(--gray-300);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 12.5px;
+      background: var(--canvas-soft);
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius-md);
+      padding: 11px 15px;
+      font-size: 13px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: var(--gray-700);
+      color: var(--ink-secondary);
     }
 
-    /* 회계연도 단위 테이블 */
+    /* 회계연도 단위 테이블 (Notion Database Table Style) */
     .table-container {
       overflow-x: auto;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      background: #ffffff;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
       margin-top: 8px;
     }
 
@@ -490,25 +588,46 @@
     }
 
     th {
-      background: var(--gray-100);
-      padding: 10px 12px;
-      color: var(--gray-700);
+      background: var(--canvas-soft);
+      padding: 10px 14px;
+      color: var(--ink-muted);
       font-weight: 600;
-      border-bottom: 1px solid var(--gray-200);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--hairline);
       white-space: nowrap;
     }
 
     td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--gray-200);
-      color: var(--gray-800);
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--hairline);
+      color: var(--ink-secondary);
       vertical-align: middle;
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
     }
 
     tr:last-child td { border-bottom: none; }
-    tr.row-active { background-color: #f0f7ff; font-weight: 600; }
-    tr.row-expired { background-color: #fafafa; color: var(--gray-500); }
-    tr.row-future { background-color: #ffffff; color: var(--gray-400); }
+
+    tr:hover {
+      background-color: #faf9f8;
+    }
+
+    tr.row-active {
+      background-color: #f2f7fd !important;
+      font-weight: 600;
+    }
+
+    tr.row-expired {
+      background-color: var(--canvas-soft);
+      color: var(--ink-muted);
+    }
+
+    tr.row-future {
+      background-color: var(--surface);
+      color: var(--ink-faint);
+    }
 
     .used-input-wrapper {
       display: inline-flex;
@@ -517,42 +636,63 @@
     }
 
     .used-input {
-      width: 60px;
+      width: 58px;
       height: 30px;
       padding: 2px 4px;
       font-size: 13.5px;
       font-weight: 600;
       text-align: center;
-      border: 1.5px solid var(--gray-300);
-      border-radius: 6px;
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-sm);
       outline: none;
       transition: all 0.15s ease;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .used-input:hover {
+      border-color: #cbd5e1;
     }
 
     .used-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+      box-shadow: 0 0 0 2px rgba(0, 117, 222, 0.15);
     }
 
     .used-input:disabled {
-      background: var(--gray-100);
-      color: var(--gray-400);
-      border-color: var(--gray-200);
+      background: var(--canvas-soft);
+      color: var(--ink-faint);
+      border-color: var(--hairline);
     }
 
+    /* 노션 알약형 상태 뱃지 */
     .status-badge {
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
-      border-radius: 6px;
+      border-radius: var(--radius-full);
       font-size: 11.5px;
       font-weight: 600;
       white-space: nowrap;
     }
 
-    .status-badge.active { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
-    .status-badge.expired { background: var(--gray-200); color: var(--gray-600); }
-    .status-badge.future { background: #f1f5f9; color: #94a3b8; }
+    .status-badge.active {
+      background: var(--accent-sky-bg);
+      color: var(--primary);
+      border: 1px solid #cbe4fc;
+    }
+
+    .status-badge.expired {
+      background: var(--canvas-soft);
+      color: var(--ink-muted);
+      border: 1px solid var(--hairline);
+    }
+
+    .status-badge.future {
+      background: var(--surface);
+      color: var(--ink-faint);
+      border: 1px solid var(--hairline);
+    }
 
     /* 5인 통합 요약 뷰 */
     #allEmployeesView {
@@ -560,25 +700,24 @@
     }
 
     .summary-card {
-      background: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--gray-200);
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
     }
 
     .law-explanation {
-      background: var(--gray-50);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
-      border: 1px dashed var(--gray-300);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      border: 1px solid var(--hairline);
       margin-top: 20px;
     }
 
     .law-explanation h4 {
       font-size: 14px;
       font-weight: 700;
-      color: var(--gray-800);
+      color: var(--ink);
       margin-bottom: 8px;
     }
 
@@ -591,8 +730,8 @@
 
     .law-explanation li {
       font-size: 12.5px;
-      color: var(--gray-600);
-      line-height: 1.5;
+      color: var(--ink-muted);
+      line-height: 1.55;
       padding-left: 14px;
       position: relative;
     }
@@ -607,15 +746,15 @@
 
     .footer {
       text-align: center;
-      margin-top: 28px;
-      font-size: 12px;
-      color: var(--gray-500);
+      margin-top: 32px;
+      font-size: 12.5px;
+      color: var(--ink-faint);
     }
 
     @media print {
       body { background: #fff; padding: 0; }
       .emp-toggle-group, .header .badge-pill, .btn, .header-tip { display: none !important; }
-      .card, .active-year-box, .summary-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+      .card, .active-year-box, .summary-card { box-shadow: none !important; border: 1px solid var(--hairline) !important; }
       .store-input { border: none !important; background: transparent !important; }
     }
 
@@ -807,7 +946,7 @@
     <section class="summary-card">
       <div class="card-title">
         <div class="icon-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#7e22ce;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-purple-ink);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           <span id="summaryTableTitle">전체 파트너(5명) 연차 & 소멸 통합 현황표</span>
         </div>
         <span style="font-size:12.5px; color:var(--gray-500);">기준일 현재 5명 전체의 당해 연도 잔여 연차와 12월 31일 소멸 D-Day를 확인합니다</span>
@@ -1021,8 +1160,8 @@
     sumBtn.className = `emp-toggle-btn summary-tab ${currentEmpId === 0 ? 'active' : ''}`;
     sumBtn.onclick = () => selectEmployee(0);
     sumBtn.innerHTML = `
-      <div class="emp-name" style="color:#7e22ce;">📊 전체 요약</div>
-      <div class="emp-badge" style="color:#7e22ce; border-color:#d8b4fe;">5인 종합표</div>
+      <div class="emp-name" style="color:var(--accent-purple-ink);">📊 전체 요약</div>
+      <div class="emp-badge" style="color:var(--accent-purple-ink); border-color:var(--accent-purple-border);">5인 종합표</div>
     `;
     container.appendChild(sumBtn);
   }

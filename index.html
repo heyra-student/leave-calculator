@@ -414,6 +414,87 @@
       transform: translateY(-1px);
     }
 
+    .btn-primary-blue {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary-blue:hover {
+      background: #0060b9;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 117, 222, 0.25);
+    }
+
+    .btn-danger-outline {
+      background: var(--surface);
+      color: var(--danger);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+
+    .btn-danger-outline:hover {
+      background: #fef2f2;
+      border-color: var(--danger);
+      color: #991b1b;
+    }
+
+    .emp-tab-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .emp-del-btn {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #ffffff;
+      border: 1.5px solid #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 2;
+    }
+
+    .emp-tab-wrapper:hover .emp-del-btn {
+      opacity: 1;
+    }
+
+    .emp-del-btn:hover {
+      transform: scale(1.15);
+      background: #dc2626;
+    }
+
+    .btn-add-emp {
+      background: var(--surface);
+      border: 1.5px dashed var(--primary);
+      color: var(--primary);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-add-emp:hover {
+      background: var(--canvas-soft);
+      transform: translateY(-1px);
+      border-style: solid;
+    }
+
     /* 파트너 근속 배너 (Deep Indigo Hero Band) */
     .tenure-banner {
       background: var(--secondary); /* #213183 */
@@ -842,6 +923,10 @@
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
             인쇄
           </button>
+          <button type="button" class="btn btn-danger-outline" onclick="deleteCurrentEmployee()" title="현재 선택된 파트너 삭제">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            파트너 삭제
+          </button>
         </div>
       </div>
     </section>
@@ -1063,7 +1148,7 @@
   function updateStoreTitleUI() {
     document.title = `${currentStoreName} 파트너 연차 계산기`;
     document.getElementById('footerStoreName').textContent = currentStoreName;
-    document.getElementById('summaryTableTitle').textContent = `[${currentStoreName}] 전체 파트너(5명) 연차 & 소멸 통합 현황표`;
+    document.getElementById('summaryTableTitle').textContent = `[${currentStoreName}] 전체 파트너(${employees.length}명) 연차 & 소멸 통합 현황표`;
   }
 
   function loadAllData() {
@@ -1074,7 +1159,7 @@
       const saved = localStorage.getItem('company_5_emp_fiscal_leave_v2');
       if (saved) {
         employees = JSON.parse(saved);
-        if (!Array.isArray(employees) || employees.length < 5) {
+        if (!Array.isArray(employees) || employees.length === 0) {
           employees = JSON.parse(JSON.stringify(DEFAULT_EMPLOYEES));
         }
       } else {
@@ -1138,6 +1223,9 @@
     container.innerHTML = '';
 
     employees.forEach(emp => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'emp-tab-wrapper';
+
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `emp-toggle-btn ${emp.id === currentEmpId ? 'active' : ''}`;
@@ -1152,16 +1240,45 @@
         <div class="emp-name">👤 ${emp.name}</div>
         <div class="emp-badge">${tenureLabel}</div>
       `;
-      container.appendChild(btn);
+      wrapper.appendChild(btn);
+
+      // 1명 남았을 때는 삭제 비활성화
+      if (employees.length > 1) {
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'emp-del-btn';
+        delBtn.title = `${emp.name} 파트너 삭제`;
+        delBtn.innerHTML = '✕';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteEmployee(emp.id, emp.name);
+        };
+        wrapper.appendChild(delBtn);
+      }
+
+      container.appendChild(wrapper);
     });
 
+    // [+ 파트너 추가] 버튼
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn-add-emp';
+    addBtn.title = '신규 파트너 추가';
+    addBtn.onclick = addNewEmployee;
+    addBtn.innerHTML = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span>파트너 추가</span>
+    `;
+    container.appendChild(addBtn);
+
+    // [📊 전체 요약] 탭
     const sumBtn = document.createElement('button');
     sumBtn.type = 'button';
     sumBtn.className = `emp-toggle-btn summary-tab ${currentEmpId === 0 ? 'active' : ''}`;
     sumBtn.onclick = () => selectEmployee(0);
     sumBtn.innerHTML = `
       <div class="emp-name" style="color:var(--accent-purple-ink);">📊 전체 요약</div>
-      <div class="emp-badge" style="color:var(--accent-purple-ink); border-color:var(--accent-purple-border);">5인 종합표</div>
+      <div class="emp-badge" style="color:var(--accent-purple-ink); border-color:var(--accent-purple-border);">${employees.length}인 종합표</div>
     `;
     container.appendChild(sumBtn);
   }
@@ -1508,6 +1625,61 @@
       renderSingleEmployee();
       saveAllData();
     }
+  }
+
+  function addNewEmployee() {
+    const name = prompt('추가할 파트너의 이름을 입력하세요:', `신규직원${employees.length + 1}`);
+    if (!name || !name.trim()) return;
+
+    const defaultHire = toISODate(new Date());
+    const hireDate = prompt(`[${name.trim()}] 파트너의 입사일을 입력하세요 (YYYY-MM-DD):`, defaultHire);
+    if (!hireDate || !hireDate.trim()) return;
+
+    // 날짜 유효성 검사
+    const parsedDate = new Date(hireDate.trim() + 'T00:00:00');
+    if (isNaN(parsedDate.getTime())) {
+      alert('올바른 날짜 형식이 아닙니다 (예: 2026-03-01).');
+      return;
+    }
+
+    const newId = employees.length > 0 ? Math.max(...employees.map(e => e.id)) + 1 : 1;
+    const newEmp = {
+      id: newId,
+      name: name.trim(),
+      hireDate: hireDate.trim(),
+      usage: {}
+    };
+
+    employees.push(newEmp);
+    saveAllData();
+    updateStoreTitleUI();
+    selectEmployee(newId);
+  }
+
+  function deleteEmployee(empId, empName) {
+    if (employees.length <= 1) {
+      alert('최소 1명의 파트너는 유지되어야 합니다.');
+      return;
+    }
+
+    const ok = confirm(`정말로 [${empName}] 파트너를 삭제하시겠습니까?\n(입력된 연차 사용 내역이 모두 삭제됩니다)`);
+    if (!ok) return;
+
+    employees = employees.filter(e => e.id !== empId);
+    saveAllData();
+    updateStoreTitleUI();
+
+    if (currentEmpId === empId) {
+      currentEmpId = employees[0].id;
+    }
+    renderEmpTabs();
+    renderCurrentView();
+  }
+
+  function deleteCurrentEmployee() {
+    const emp = employees.find(e => e.id === currentEmpId);
+    if (!emp) return;
+    deleteEmployee(emp.id, emp.name);
   }
 </script>
 

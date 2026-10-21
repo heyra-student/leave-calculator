@@ -206,68 +206,85 @@
       font-size: 12.5px;
     }
 
-    /* 파트너 전환 토글 바 (Tabs) */
+    /* 토스/애플 스타일 세그먼트 네비게이션 카드 */
     .employee-nav-card {
       background: var(--surface);
       border-radius: var(--radius-xl);
-      padding: 14px 18px;
+      padding: 16px 20px;
       box-shadow: var(--shadow-card);
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
     }
 
     .nav-label {
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       color: var(--ink-muted);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
+    /* 토스/애플 일체형 세그먼트 트랙 바 */
     .emp-toggle-group {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      background: #f1f5f9;
+      border-radius: var(--radius-full);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .emp-toggle-group::-webkit-scrollbar {
+      display: none;
     }
 
+    /* 세그먼트 알약 버튼 (단정하고 슬림한 캡슐) */
     .emp-toggle-btn {
-      display: flex;
-      flex-direction: column;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-      padding: 10px 6px;
-      background: var(--canvas-soft);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-md);
+      gap: 7px;
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-full);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      color: #64748b;
+      font-weight: 600;
+      font-size: 13.5px;
+      white-space: nowrap;
+      user-select: none;
       text-align: center;
     }
 
     .emp-toggle-btn:hover {
-      background: var(--surface);
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.65);
+      transform: none;
+      border-color: transparent;
     }
 
+    /* 선택된 캡슐 (White Floating Pill) */
     .emp-toggle-btn.active {
-      background: var(--surface);
-      border: 1.5px solid var(--primary);
-      box-shadow: 0 0 0 1px var(--primary), 0 2px 6px rgba(0, 117, 222, 0.12);
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+      border: none;
+      font-weight: 700;
     }
 
     .emp-toggle-btn .emp-name {
       font-size: 13.5px;
       font-weight: 600;
-      color: var(--ink);
+      color: inherit;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .emp-toggle-btn.active .emp-name {
@@ -277,35 +294,49 @@
 
     .emp-toggle-btn .emp-badge {
       font-size: 11px;
-      font-weight: 500;
-      color: var(--ink-muted);
-      background: var(--surface);
-      padding: 1px 7px;
+      font-weight: 600;
+      color: #94a3b8;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 8px;
       border-radius: var(--radius-full);
-      border: 1px solid var(--hairline);
+      border: none;
+      transition: all 0.15s ease;
     }
 
     .emp-toggle-btn.active .emp-badge {
       background: var(--accent-sky-bg);
       color: var(--primary);
-      border-color: #cbe4fc;
-      font-weight: 600;
+      font-weight: 700;
     }
 
+    /* 📊 전체 요약 캡슐 */
     .emp-toggle-btn.summary-tab {
-      background: var(--accent-purple-bg);
-      border-color: var(--accent-purple-border);
+      background: transparent;
+      border: none;
+      color: #7c3aed;
+      margin-left: auto;
     }
 
     .emp-toggle-btn.summary-tab:hover {
-      background: #fdf8ff;
-      border-color: #d8b4fe;
+      background: rgba(243, 232, 255, 0.7);
     }
 
     .emp-toggle-btn.summary-tab.active {
-      background: var(--surface);
-      border: 1.5px solid var(--accent-purple-ink);
-      box-shadow: 0 0 0 1px var(--accent-purple-ink), 0 2px 6px rgba(107, 33, 168, 0.15);
+      background: #ffffff;
+      color: #6b21a8;
+      box-shadow: 0 2px 8px rgba(107, 33, 168, 0.15);
+      border: none;
+    }
+
+    .emp-toggle-btn.summary-tab .emp-badge {
+      background: rgba(124, 58, 237, 0.08);
+      color: #7c3aed;
+      border: none;
+    }
+
+    .emp-toggle-btn.summary-tab.active .emp-badge {
+      background: #f3e8ff;
+      color: #6b21a8;
     }
 
     .emp-toggle-btn.summary-tab.active .emp-name {

@@ -9,364 +9,283 @@
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
-    /* ==========================================================================
-       DESIGN SYSTEM (Inspired by Notion / DESIGN.md)
-       * Note: Specific company logos, trademarks, and brand names are strictly excluded.
-       ========================================================================== */
     :root {
-      /* Brand & Core Palette */
-      --primary: #0075de;              /* Notion Blue (주요 액션 및 링크) */
-      --primary-active: #005bab;       /* Pressed Blue */
-      --secondary: #213183;            /* Deep Indigo (다크 히어로 밴드) */
-      --on-primary: #ffffff;
-
-      /* Canvas & Surface */
-      --canvas: #ffffff;
-      --canvas-soft: #f6f5f4;          /* Warm Paper (시그니처 배경 오프화이트) */
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
       --surface: #ffffff;
-      --hairline: #e6e6e6;             /* 1px 정갈한 헤어라인 테두리 */
+      --canvas: #f8fafc;
+      --border-subtle: #e2e8f0;
+      --border-light: #f1f5f9;
+      --ink: #0f172a;
+      --ink-muted: #64748b;
+      --ink-faint: #94a3b8;
+      
+      --accent-green: #10b981;
+      --accent-green-bg: #ecfdf5;
+      --accent-green-border: #a7f3d0;
+      --accent-green-text: #047857;
 
-      /* Ink Typography */
-      --ink: #000000;                  /* 헤드라인 및 주요 텍스트 */
-      --ink-secondary: #31302e;        /* 웜 차콜 (기본 본문 텍스트) */
-      --ink-muted: #615d59;            /* 스톤 (설명 및 라벨) */
-      --ink-faint: #a39e98;            /* 애쉬 (캡션 및 플레이스홀더) */
+      --accent-orange: #f59e0b;
+      --accent-orange-bg: #fffbeb;
+      --accent-orange-border: #fde68a;
+      --accent-orange-text: #b45309;
 
-      /* Decorative Sticker Palette (시각적 악센트) */
-      --accent-sky: #62aef0;
-      --accent-sky-bg: #edf5fd;
-      --accent-green: #1aae39;
-      --accent-green-bg: #eefaf1;
-      --accent-green-border: #c8edd0;
-      --accent-green-ink: #13862b;
-      --accent-orange: #dd5b00;
-      --accent-orange-bg: #fef6ee;
-      --accent-orange-border: #fcdbc2;
-      --accent-orange-ink: #c2410c;
-      --accent-purple: #d6b6f6;
-      --accent-purple-bg: #f8f3fe;
-      --accent-purple-border: #e8d7fd;
-      --accent-purple-ink: #6b21a8;
-
-      /* Radii */
-      --radius-xs: 4px;
-      --radius-sm: 6px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --radius-xl: 16px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
       --radius-full: 9999px;
 
-      /* Shadows (헤어라인 중심의 절제된 소프트 음영) */
-      --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
-      --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 1px var(--hairline);
-      --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.08);
-      --shadow-elevated: 0 10px 24px -4px rgba(0, 0, 0, 0.08);
-
-      /* Compatibility Variables */
-      --danger: #dc2626;
-      --success: #16a34a;
-      --gray-300: var(--hairline);
-      --gray-500: var(--ink-muted);
-      --gray-600: var(--ink-muted);
-      --gray-700: var(--ink-secondary);
-      --gray-800: var(--ink);
-      --gray-900: var(--ink);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       letter-spacing: -0.02em;
     }
 
     body {
-      background-color: var(--canvas-soft); /* Warm Paper */
-      color: var(--ink-secondary);
-      line-height: 1.6;
-      padding: 36px 16px 80px;
+      background-color: var(--canvas);
+      color: var(--ink);
+      line-height: 1.5;
+      padding: 40px 20px 80px;
       min-height: 100vh;
     }
 
     .container {
-      max-width: 1020px;
+      max-width: 960px;
       margin: 0 auto;
     }
 
-    /* 헤더 */
+    /* 심플 미니멀 헤더 */
     .header {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
-    .badge-pill {
+    .title-row {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      color: var(--primary);
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: var(--radius-full);
-      margin-bottom: 12px;
-      border: 1px solid var(--hairline);
-      box-shadow: var(--shadow-subtle);
-    }
-
-    /* 지점명 직접 입력 제목 */
-    .title-row {
-      display: flex;
-      align-items: center;
       justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
+      gap: 10px;
+      margin-bottom: 4px;
     }
 
     .store-input-wrap {
-      display: inline-flex;
-      align-items: center;
       position: relative;
     }
 
     .store-input {
-      font-size: 26px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 800;
       color: var(--primary);
-      background: var(--surface);
-      border: 1.5px dashed #b8dafc;
-      border-radius: var(--radius-md);
-      padding: 3px 12px;
+      background: #ffffff;
+      border: 1px dashed #93c5fd;
+      border-radius: var(--radius-sm);
+      padding: 3px 10px;
+      width: 120px;
       text-align: center;
       outline: none;
-      width: 135px;
-      transition: all 0.15s ease;
-      letter-spacing: -0.025px;
-    }
-
-    .store-input:hover {
-      border-color: var(--primary);
-      background: #fcfdfe;
+      transition: all 0.2s;
     }
 
     .store-input:focus {
-      border-color: var(--primary);
       border-style: solid;
-      background: var(--surface);
-      box-shadow: 0 0 0 3px rgba(0, 117, 222, 0.15);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
     .main-title-suffix {
-      font-size: 27px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 800;
       color: var(--ink);
-      letter-spacing: -0.625px;
     }
 
-    .header-tip {
-      font-size: 13px;
-      color: var(--primary);
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .header p {
-      font-size: 14.5px;
-      color: var(--ink-muted);
-      word-break: keep-all;
-    }
-
-    /* 회계연도 기준 안내 콜아웃 */
-    .rule-callout {
-      background: var(--surface);
-      border: 1px solid var(--hairline);
-      border-left: 3px solid var(--primary);
-      border-radius: var(--radius-lg);
-      padding: 14px 18px;
+    .header-subtitle {
       font-size: 13.5px;
-      color: var(--ink-secondary);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    .rule-callout code {
-      background: var(--canvas-soft);
-      border: 1px solid var(--hairline);
-      padding: 2px 6px;
-      border-radius: var(--radius-xs);
-      font-weight: 600;
-      color: var(--primary);
-      font-size: 12.5px;
-    }
-
-    /* 토스/애플 스타일 세그먼트 네비게이션 카드 */
-    .employee-nav-card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 16px 20px;
-      box-shadow: var(--shadow-card);
-      margin-bottom: 22px;
-      border: 1px solid rgba(226, 232, 240, 0.8);
-    }
-
-    .nav-label {
-      font-size: 12.5px;
-      font-weight: 600;
       color: var(--ink-muted);
-      letter-spacing: -0.01em;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      margin-top: 4px;
     }
 
-    /* 토스/애플 일체형 세그먼트 트랙 바 */
+    /* 접이식 규칙 아코디언 */
+    .rule-details {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--ink-muted);
+      transition: all 0.2s;
+    }
+
+    .rule-details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+      list-style: none;
+      user-select: none;
+    }
+
+    .rule-details[open] summary {
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .rule-details-body {
+      line-height: 1.6;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border-subtle);
+      font-size: 12.5px;
+    }
+
+    /* 파트너 세그먼트 알약 바 */
+    .employee-nav-card {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
     .emp-toggle-group {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px;
+      padding: 4px;
       background: #f1f5f9;
       border-radius: var(--radius-full);
       overflow-x: auto;
       scrollbar-width: none;
     }
-    .emp-toggle-group::-webkit-scrollbar {
-      display: none;
+    .emp-toggle-group::-webkit-scrollbar { display: none; }
+
+    .emp-tab-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
     }
 
-    /* 세그먼트 알약 버튼 (단정하고 슬림한 캡슐) */
     .emp-toggle-btn {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 16px;
+      gap: 6px;
+      padding: 7px 14px;
       background: transparent;
       border: none;
       border-radius: var(--radius-full);
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       color: #64748b;
       font-weight: 600;
       font-size: 13.5px;
       white-space: nowrap;
-      user-select: none;
-      text-align: center;
+      transition: all 0.15s ease;
     }
 
     .emp-toggle-btn:hover {
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.65);
-      transform: none;
-      border-color: transparent;
+      background: rgba(255, 255, 255, 0.7);
     }
 
-    /* 선택된 캡슐 (White Floating Pill) */
     .emp-toggle-btn.active {
       background: #ffffff;
       color: var(--primary);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
-      border: none;
-      font-weight: 700;
-    }
-
-    .emp-toggle-btn .emp-name {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: inherit;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .emp-toggle-btn.active .emp-name {
-      color: var(--primary);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
       font-weight: 700;
     }
 
     .emp-toggle-btn .emp-badge {
       font-size: 11px;
-      font-weight: 600;
       color: #94a3b8;
       background: rgba(0, 0, 0, 0.04);
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: var(--radius-full);
-      border: none;
-      transition: all 0.15s ease;
     }
 
     .emp-toggle-btn.active .emp-badge {
-      background: var(--accent-sky-bg);
+      background: #eff6ff;
       color: var(--primary);
       font-weight: 700;
     }
 
-    /* 📊 전체 요약 캡슐 */
     .emp-toggle-btn.summary-tab {
-      background: transparent;
-      border: none;
-      color: #7c3aed;
       margin-left: auto;
-    }
-
-    .emp-toggle-btn.summary-tab:hover {
-      background: rgba(243, 232, 255, 0.7);
+      color: #7c3aed;
     }
 
     .emp-toggle-btn.summary-tab.active {
       background: #ffffff;
-      color: #6b21a8;
-      box-shadow: 0 2px 8px rgba(107, 33, 168, 0.15);
-      border: none;
-    }
-
-    .emp-toggle-btn.summary-tab .emp-badge {
-      background: rgba(124, 58, 237, 0.08);
       color: #7c3aed;
-      border: none;
+      box-shadow: 0 1px 6px rgba(124, 58, 237, 0.15);
     }
 
-    .emp-toggle-btn.summary-tab.active .emp-badge {
-      background: #f3e8ff;
-      color: #6b21a8;
+    .btn-add-emp {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--radius-full);
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
     }
 
-    .emp-toggle-btn.summary-tab.active .emp-name {
-      color: var(--accent-purple-ink);
+    .btn-add-emp:hover {
+      background: #ffffff;
+      border-color: var(--primary);
+      color: var(--primary);
     }
 
-    /* 카드 */
+    .emp-del-btn {
+      position: absolute;
+      top: -2px;
+      right: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #ffffff;
+      border: 1.5px solid #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .emp-tab-wrapper:hover .emp-del-btn { opacity: 1; }
+
+    /* 모던 카드 공통 */
     .card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 22px 24px;
-      box-shadow: var(--shadow-card);
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
       margin-bottom: 20px;
-      transition: box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-      box-shadow: var(--shadow-hover);
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--ink);
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
     }
 
     .icon-title {
@@ -378,504 +297,282 @@
     /* 폼 설정 바 */
     .form-grid {
       display: grid;
-      grid-template-columns: 1.2fr 1.2fr 1.2fr auto;
-      gap: 14px;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
       align-items: flex-end;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
 
     .form-group label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--ink-secondary);
+      color: var(--ink-muted);
     }
 
     .form-control {
-      width: 100%;
-      height: 40px;
-      padding: 8px 12px;
-      font-size: 14px;
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-md);
+      height: 38px;
+      padding: 6px 12px;
+      font-size: 13.5px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
       outline: none;
-      transition: all 0.15s ease;
-      background-color: var(--surface);
-      color: var(--ink);
+      transition: border-color 0.15s ease;
     }
-
-    .form-control:hover {
-      border-color: #cbd5e1;
-    }
-
     .form-control:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0, 117, 222, 0.12);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
-      padding: 8px 18px;
-      font-size: 13.5px;
-      font-weight: 600;
-      border-radius: var(--radius-full); /* Notion Pill Buttons */
-      cursor: pointer;
-      border: 1px solid var(--hairline);
-      height: 40px;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--ink-secondary);
-    }
-
-    .btn-secondary:hover {
-      background: var(--canvas-soft);
-      color: var(--ink);
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
-    }
-
-    .btn-primary-blue {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-    }
-
-    .btn-primary-blue:hover {
-      background: #0060b9;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(0, 117, 222, 0.25);
-    }
-
-    .btn-danger-outline {
-      background: var(--surface);
-      color: var(--danger);
-      border: 1px solid rgba(220, 38, 38, 0.25);
-    }
-
-    .btn-danger-outline:hover {
-      background: #fef2f2;
-      border-color: var(--danger);
-      color: #991b1b;
-    }
-
-    .emp-tab-wrapper {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .emp-del-btn {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #ef4444;
-      color: #ffffff;
-      border: 1.5px solid #ffffff;
-      font-size: 10px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-      z-index: 2;
-    }
-
-    .emp-tab-wrapper:hover .emp-del-btn {
-      opacity: 1;
-    }
-
-    .emp-del-btn:hover {
-      transform: scale(1.15);
-      background: #dc2626;
-    }
-
-    .btn-add-emp {
-      background: var(--surface);
-      border: 1.5px dashed var(--primary);
-      color: var(--primary);
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
+      padding: 0 16px;
       font-size: 13px;
       font-weight: 600;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      height: 38px;
+      border: 1px solid var(--border-subtle);
+      background: #ffffff;
+      color: var(--ink);
       transition: all 0.15s ease;
     }
+    .btn:hover { background: #f8fafc; }
 
-    .btn-add-emp:hover {
-      background: var(--canvas-soft);
-      transform: translateY(-1px);
-      border-style: solid;
+    .btn-danger-outline {
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .btn-danger-outline:hover {
+      background: #fef2f2;
+      border-color: #ef4444;
     }
 
-    /* 파트너 근속 배너 (Deep Indigo Hero Band) */
-    .tenure-banner {
-      background: var(--secondary); /* #213183 */
-      color: #ffffff;
-      border-radius: var(--radius-xl);
-      padding: 18px 24px;
+    /* 이번 연차 주기 대시보드 (미니멀 화이트 박스) */
+    .active-year-box {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
       margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .active-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .active-emp-line {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 14px;
-      box-shadow: 0 4px 14px rgba(33, 49, 131, 0.18);
+      gap: 10px;
     }
 
-    .tenure-info h3 {
-      font-size: 12px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 2px;
-      letter-spacing: 0.04em;
+    .active-emp-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ink);
     }
 
-    .tenure-info .highlight {
-      font-size: 20px;
-      font-weight: 700;
-      color: #ffffff;
-    }
-
-    .current-period-tag {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      padding: 6px 14px;
-      border-radius: var(--radius-md);
-      text-align: right;
-    }
-
-    .current-period-tag .label {
-      font-size: 11px;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 1px;
-    }
-
-    .current-period-tag .val {
-      font-size: 14px;
-      font-weight: 700;
-      color: #bce1fe;
-    }
-
-    /* 현재 유효 회계연도 대시보드 */
-    .active-year-box {
-      background: var(--surface);
-      border: 1.5px solid var(--primary);
-      border-radius: var(--radius-xl);
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 16px rgba(0, 117, 222, 0.08);
-      position: relative;
-    }
-
-    .active-year-box::after {
-      content: "현재 유효한 연차 사용 주기";
-      position: absolute;
-      top: -11px;
-      left: 20px;
-      background: var(--primary);
-      color: #ffffff;
-      font-size: 11.5px;
+    .active-tenure-tag {
+      font-size: 12.5px;
       font-weight: 600;
+      color: var(--primary);
+      background: #eff6ff;
       padding: 2px 10px;
       border-radius: var(--radius-full);
-      letter-spacing: 0.02em;
     }
 
+    .active-period-dates {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-top: 4px;
+    }
+
+    .active-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .active-period-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .active-dday-pill {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #b91c1c;
+      background: #fee2e2;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+    }
+
+    /* 4칸 지표 카드 */
     .active-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 12px;
+      gap: 14px;
     }
 
     .stat-card {
-      background: var(--canvas-soft);
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-lg);
-      padding: 16px 14px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      background: #f8fafc;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 16px;
       transition: all 0.15s ease;
     }
 
-    .stat-card:hover {
-      background: var(--surface);
-      border-color: #cbd5e1;
-      box-shadow: var(--shadow-subtle);
-    }
-
-    /* 노션 스티커 그린 (잔여 연차) */
     .stat-card.highlight-green {
       background: var(--accent-green-bg);
       border-color: var(--accent-green-border);
     }
 
-    /* 노션 스티커 오렌지 (소멸 예정일) */
     .stat-card.highlight-orange {
       background: var(--accent-orange-bg);
       border-color: var(--accent-orange-border);
     }
 
     .stat-card .stat-label {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--ink-muted);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .stat-card .stat-val {
-      font-size: 25px;
-      font-weight: 700;
+      font-size: 26px;
+      font-weight: 800;
       color: var(--ink);
-      line-height: 1.15;
-      font-feature-settings: "tnum";
-      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
     }
 
     .stat-card.highlight-green .stat-val {
-      color: var(--accent-green-ink);
+      color: var(--accent-green-text);
     }
 
     .stat-card.highlight-orange .stat-val {
-      color: var(--accent-orange-ink);
-      font-size: 16px;
+      color: var(--accent-orange-text);
+      font-size: 18px;
     }
 
     .stat-card .stat-sub {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--ink-muted);
-      margin-top: 3px;
-      word-break: keep-all;
+      margin-top: 4px;
     }
 
     .next-grant-bar {
-      margin-top: 14px;
-      background: var(--canvas-soft);
-      border: 1px dashed #cbd5e1;
-      border-radius: var(--radius-md);
-      padding: 11px 15px;
-      font-size: 13px;
+      margin-top: 16px;
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 12.5px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      color: var(--ink-secondary);
+      align-items: center;
+      color: var(--ink-muted);
     }
 
-    /* 회계연도 단위 테이블 (Notion Database Table Style) */
+    /* 깔끔한 미니멀 테이블 */
     .table-container {
       overflow-x: auto;
-      border: 1px solid var(--hairline);
-      border-radius: var(--radius-lg);
-      background: var(--surface);
-      margin-top: 8px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      text-align: left;
       font-size: 13px;
-      min-width: 760px;
     }
 
     th {
-      background: var(--canvas-soft);
+      background: #f8fafc;
       padding: 10px 14px;
       color: var(--ink-muted);
       font-weight: 600;
       font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      border-bottom: 1px solid var(--hairline);
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
       white-space: nowrap;
     }
 
     td {
       padding: 11px 14px;
-      border-bottom: 1px solid var(--hairline);
-      color: var(--ink-secondary);
-      vertical-align: middle;
-      font-feature-settings: "tnum";
-      font-variant-numeric: tabular-nums;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--ink);
     }
 
     tr:last-child td { border-bottom: none; }
 
-    tr:hover {
-      background-color: #faf9f8;
-    }
-
     tr.row-active {
-      background-color: #f2f7fd !important;
+      background: #f8fbff;
       font-weight: 600;
-    }
-
-    tr.row-expired {
-      background-color: var(--canvas-soft);
-      color: var(--ink-muted);
-    }
-
-    tr.row-future {
-      background-color: var(--surface);
-      color: var(--ink-faint);
-    }
-
-    .used-input-wrapper {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
     }
 
     .used-input {
-      width: 58px;
-      height: 30px;
-      padding: 2px 4px;
-      font-size: 13.5px;
-      font-weight: 600;
+      width: 54px;
+      height: 28px;
       text-align: center;
-      border: 1px solid var(--hairline);
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
       outline: none;
-      transition: all 0.15s ease;
-      background: var(--surface);
-      color: var(--ink);
     }
-
-    .used-input:hover {
-      border-color: #cbd5e1;
-    }
-
     .used-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(0, 117, 222, 0.15);
     }
 
-    .used-input:disabled {
-      background: var(--canvas-soft);
-      color: var(--ink-faint);
-      border-color: var(--hairline);
-    }
-
-    /* 노션 알약형 상태 뱃지 */
     .status-badge {
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
       border-radius: var(--radius-full);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 600;
-      white-space: nowrap;
     }
-
     .status-badge.active {
-      background: var(--accent-sky-bg);
+      background: #eff6ff;
       color: var(--primary);
-      border: 1px solid #cbe4fc;
     }
-
     .status-badge.expired {
-      background: var(--canvas-soft);
-      color: var(--ink-muted);
-      border: 1px solid var(--hairline);
+      background: #f1f5f9;
+      color: #94a3b8;
     }
-
     .status-badge.future {
-      background: var(--surface);
-      color: var(--ink-faint);
-      border: 1px solid var(--hairline);
-    }
-
-    /* 5인 통합 요약 뷰 */
-    #allEmployeesView {
-      display: none;
-    }
-
-    .summary-card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 22px 24px;
-      box-shadow: var(--shadow-card);
-    }
-
-    .law-explanation {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      border: 1px solid var(--hairline);
-      margin-top: 20px;
-    }
-
-    .law-explanation h4 {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 8px;
-    }
-
-    .law-explanation ul {
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .law-explanation li {
-      font-size: 12.5px;
-      color: var(--ink-muted);
-      line-height: 1.55;
-      padding-left: 14px;
-      position: relative;
-    }
-
-    .law-explanation li::before {
-      content: "•";
-      position: absolute;
-      left: 2px;
-      color: var(--primary);
-      font-weight: bold;
+      background: #ffffff;
+      color: #cbd5e1;
+      border: 1px solid #f1f5f9;
     }
 
     .footer {
       text-align: center;
-      margin-top: 32px;
-      font-size: 12.5px;
+      margin-top: 40px;
+      font-size: 12px;
       color: var(--ink-faint);
     }
 
-    @media print {
-      body { background: #fff; padding: 0; }
-      .emp-toggle-group, .header .badge-pill, .btn, .header-tip { display: none !important; }
-      .card, .active-year-box, .summary-card { box-shadow: none !important; border: 1px solid var(--hairline) !important; }
-      .store-input { border: none !important; background: transparent !important; }
-    }
-
-    @media (max-width: 860px) {
-      .emp-toggle-group { grid-template-columns: repeat(3, 1fr); }
-      .form-grid { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 800px) {
       .active-grid { grid-template-columns: repeat(2, 1fr); }
-      .store-input { font-size: 22px; width: 120px; }
-      .main-title-suffix { font-size: 23px; }
+      .form-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -884,32 +581,24 @@
 <div class="container">
   <!-- 상단 헤더: OO점 직접 입력 가능 -->
   <header class="header">
-    <div class="badge-pill">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      회계연도(매년 1월 1일) 기준 연차 산정 방식 적용
-    </div>
-
-    <!-- 타이틀: [지점명 입력] 파트너 연차 계산기 -->
     <div class="title-row">
       <div class="store-input-wrap">
-        <input type="text" id="storeNameInput" class="store-input" value="강남점" title="클릭하여 지점명을 수정하세요" placeholder="지점명">
+        <input type="text" id="storeNameInput" class="store-input" value="강남점" title="지점명 수정" placeholder="지점명">
       </div>
-      <span class="main-title-suffix">파트너 연차 계산기</span>
+      <span class="main-title-suffix">연차 관리</span>
     </div>
-    <div class="header-tip">💡 파란색 점선 상자를 클릭하면 우리 지점명(예: 홍대점, 역삼점 등)으로 바로 바꿀 수 있습니다.</div>
-    <p>입사 첫 해는 월차로 계산하고, 그다음 해부터는 매년 1월 1일 기준으로 1년 단위 연차를 부여·소멸합니다.</p>
+    <p class="header-subtitle">근로기준법 회계연도(1월 1일) 기준 자동 계산기</p>
   </header>
 
-  <!-- 회계연도 기준 안내 콜아웃 -->
-  <div class="rule-callout">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-    <div>
-      <strong>회계연도(1월 1일) 기준 연차 산정 공식 안내:</strong><br>
-      • <strong>입사 첫 해:</strong> 입사일부터 12월 31일까지 1개월 개근 시 1일씩 '월차' 부여<br>
-      • <strong>입사 다음 해 1월 1일:</strong> 전년도 재직일수 비례 연차 부여 <code>[15일 × (전년도 재직일수 ÷ 365)]</code><br>
-      • <strong>그다음 해 1월 1일부터:</strong> 매년 1월 1일 15일 일괄 부여 (3년차부터 2년마다 1일씩 가산, 최대 25일), 사용 기간은 매년 1월 1일 ~ 12월 31일(12월 31일 자정 소멸)
+  <!-- 회계연도 안내 (접이식 아코디언) -->
+  <details class="rule-details">
+    <summary>💡 회계연도(1월 1일) 기준 연차 규정 안내</summary>
+    <div class="rule-details-body">
+      • <strong>입사 첫 해:</strong> 1개월 개근 시 1일씩 월차 부여 (최대 11일)<br>
+      • <strong>입사 다음 해 1월 1일:</strong> 전년도 재직일수 비례 연차 <code>[15일 × (전년도 재직일수 ÷ 365)]</code><br>
+      • <strong>그다음 해부터:</strong> 매년 1월 1일 15일 일괄 부여 (3년차부터 2년마다 1일 가산, 매년 12월 31일 소멸)
     </div>
-  </div>
+  </details>
 
   <!-- 파트너 전환 토글 바 (Tabs) -->
   <section class="employee-nav-card">
@@ -962,12 +651,7 @@
       </div>
     </section>
 
-    <!-- 파트너 근속 배너 -->
-    <div class="tenure-banner">
-      <div class="tenure-info">
-        <h3 id="tenureEmpLabel">근무 기간</h3>
-        <div class="highlight" id="tenureString">계산 중...</div>
-      </div>
+    
       <div class="current-period-tag">
         <div class="label">현재 적용 중인 연차 주기</div>
         <div class="val" id="activePeriodName">확인 중...</div>
@@ -976,17 +660,17 @@
 
     <!-- 현재 유효한 회계연도 연차 주기 대시보드 -->
     <section class="active-year-box">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
-        <div>
-          <h2 style="font-size:17px; font-weight:800; color:var(--gray-900);" id="activePeriodHeading">
-            이번 연차 주기 현황
-          </h2>
-          <p style="font-size:12.5px; color:var(--gray-600); margin-top:2px;" id="activePeriodDateRange">
-            사용 유효 기간: -
-          </p>
+      <div class="active-header">
+        <div class="active-title-group">
+          <div class="active-emp-line">
+            <span class="active-emp-name" id="activePeriodHeading">파트너 현황</span>
+            <span class="active-tenure-tag" id="tenureString">계산 중...</span>
+          </div>
+          <p class="active-period-dates" id="activePeriodDateRange">사용 기간: -</p>
         </div>
-        <div id="activeDdayBadge" style="background:#fee2e2; color:#b91c1c; font-weight:700; font-size:12.5px; padding:3px 9px; border-radius:6px;">
-          소멸 D-Day
+        <div class="active-header-right">
+          <span class="active-period-badge" id="activePeriodName">-</span>
+          <span class="active-dday-pill" id="activeDdayBadge">D-Day</span>
         </div>
       </div>
 

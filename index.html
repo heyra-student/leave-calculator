@@ -1014,7 +1014,6 @@
     document.getElementById('empHireDateInput').value = emp.hireDate;
     document.getElementById('currentEmpSettingTitle').textContent = `[${emp.name} 파트너] 정보 및 입사일 설정`;
     document.getElementById('empTableTitle').textContent = `[${emp.name} 파트너] 회계연도 기준 연차 발생 & 사용 기록표`;
-    document.getElementById('tenureEmpLabel').textContent = `${emp.name} 파트너의 근무 기간`;
 
     const hireDate = new Date(emp.hireDate + 'T00:00:00');
     const baseDate = new Date(baseDateStr + 'T00:00:00');
